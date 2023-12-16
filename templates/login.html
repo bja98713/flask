@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <!-- Ajoutez vos balises meta, lien vers le style, etc. ici -->
+    <title>Connexion</title>
+</head>
+<body>
+    <h1>Connexion</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flash">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <form method="POST" action="{{ url_for('login') }}">
+        <label for="username">Nom d'utilisateur:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Mot de passe:</label>
+        <input type="password" id="password" name="password" required>
+        <input type="submit" value="Se connecter">
+    </form>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}<!-- logout.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <!-- Ajoutez vos balises meta, lien vers le style, etc. ici -->
+    <title>Déconnexion</title>
+</head>
+<body>
+    <h1>Déconnexion</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flash">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <p>Vous avez été déconnecté avec succès.</p>
+    <p><a href="{{ url_for('login') }}">Se connecter à nouveau</a></p>
+</body>
+</html>
+{% endblock %}

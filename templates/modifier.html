@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier une Activité</title>
+    <style>
+
+        .center-text {
+        text-align: center;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 20px;
+        }
+
+        h1 {
+                color: #007BFF;
+        }
+
+        h2 {
+                color: #DC3545;
+        }
+
+        p {
+            line-height: 1.6;
+        }
+
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        form {
+            max-width: 600px;
+            margin: auto;
+            background-color: #f4f4f4;
+            padding: 1px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="center-text">Modifier une Activité</h1>
+    <form method="POST" action="{{ url_for('modifier', id=activite.id) }}">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" value="{{ activite.date }}" required>
+        <br>
+        <label for="numero_semaine">Numéro de Semaine:</label>
+        <input type="text" id="numero_semaine" name="numero_semaine" value="{{ activite.numero_semaine }}" required>
+        <br>
+        <label for="numero_facture">Numéro de Facture:</label>
+        <input type="text" id="numero_facture" name="numero_facture" value="{{ activite.numero_facture }}">
+        <br>
+        <label for="dn">Numéro DN:</label>
+        <input type="text" id="dn" name="dn" value="{{ activite.dn }}" required>
+        <br>
+        <label for="nom">Nom:</label>
+        <input type="text" id="nom" name="nom" value="{{ activite.nom }}" required>
+        <br>
+        <label for="prenom">Prénom:</label>
+        <input type="text" id="prenom" name="prenom" value="{{ activite.prenom }}" required>
+        <br>
+        <label for="date_naissance">Date de Naissance:</label>
+        <input type="date" id="date_naissance" name="date_naissance" value="{{ activite.date_naissance }}" required>
+        <br>
+        <label for="numero_telephone">Numéro de téléphone:</label>
+        <input type="text" id="numero_telephone" name="numero_telephone" value="{{ activite.numero_telephone }}" required>
+        <br>
+        <label for="mail">Mail:</label>
+        <input type="text" id="mail" name="mail" value="{{ activite.mail }}" required>
+        <br>
+        <label for="acte">Acte:</label>
+        <select id="acte" name="acte" required>
+        <option value="CS" {{ 'selected' if activite.acte == 'CS' }}>CS</option>
+        <option value="CS_LM" {{ 'selected' if activite.acte == 'CS_LM' }}>CS_LM</option>
+        <option value="CS_H" {{ 'selected' if activite.acte == 'CS_H' }}>CS_H</option>
+        <option value="CS_MGEN" {{ 'selected' if activite.acte == 'CS_MGEN' }}>CS_MGEN</option>
+        <option value="ZCQM005" {{ 'selected' if activite.acte == 'ZCQM005' }}>ZCQM005</option>
+        <option value="ZCQM005_LM" {{ 'selected' if activite.acte == 'ZCQM005_LM' }}>ZCQM005_LM</option>
+        <option value="ZCQM005_H" {{ 'selected' if activite.acte == 'ZCQM005_H' }}>ZCQM005_H</option>
+        <option value="ZCQM005_MGEN" {{ 'selected' if activite.acte == 'ZCQM005_MGEN' }}>ZCQM005_MGEN</option>
+        <option value="HEQE002" {{ 'selected' if activite.acte == 'HEQE002' }}>HEQE002</option>
+        <option value="HEQE002_EXT" {{ 'selected' if activite.acte == 'HEQE002_EXT' }}>HEQE002_EXT</option>
+        <option value="HEQE002/2+HHQE002" {{ 'selected' if activite.acte == 'HEQE002/2+HHQE002' }}>HEQE002/2+HHQE002</option>
+        <option value="HEQE002/2+HHFE002" {{ 'selected' if activite.acte == 'HEQE002/2+HHFE002' }}>HEQE002/2+HHFE002</option>
+        <option value="HGQE003/2+HHQE002" {{ 'selected' if activite.acte == 'HGQE003/2+HHQE002' }}>HGQE003/2+HHQE002</option>
+        <option value="HEQE002/2+HHFE006" {{ 'selected' if activite.acte == 'HEQE002/2+HHFE006' }}>HEQE002/2+HHFE006</option>
+        <option value="HHFE002" {{ 'selected' if activite.acte == 'HHFE002' }}>HHFE002</option>
+        <option value="HHQE002" {{ 'selected' if activite.acte == 'HHQE002' }}>HHQE002</option>
+        <option value="HHGE002" {{ 'selected' if activite.acte == 'HHGE002' }}>HHGE002</option>
+        <option value="HEAE003" {{ 'selected' if activite.acte == 'HEAE003' }}>HEAE003</option>
+        <option value="HESE002" {{ 'selected' if activite.acte == 'HESE002' }}>HESE002</option>
+        <option value="HFKE001" {{ 'selected' if activite.acte == 'HFKE001' }}>HFKE001</option>
+        </select>
+        <br>
+        <label for="modalite_paiement">Modalité de Paiement:</label>
+        <select id="modalite_paiement" name="modalite_paiement" required>
+        <option value="-" {{ 'selected' if activite.acte == '-' }}>-</option>
+        <option value="Especes" {{ 'selected' if activite.acte == 'Especes' }}>Especes</option>
+        <option value="CB" {{ 'selected' if activite.acte == 'CB' }}>CB</option>
+        <option value="Cheque" {{ 'selected' if activite.acte == 'Cheque' }}>Cheque</option>
+        <option value="Virement" {{ 'selected' if activite.acte == 'Virement' }}>Virement</option>
+        </select>
+        <br>
+        <label for="paiement">Paiement:</label>
+        <input type="text" id="paiement" name="paiement" value="{{ activite.paiement }}">
+        <br>
+        <label for="observation">Observation:</label>
+        <input type="text" id="observation" name="observation" value="{{ activite.observation }}">
+        <br>
+        <input type="submit" value="Enregistrer les modifications">
+    </form>
+</body>
+</html>
+{% endblock %}

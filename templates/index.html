@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Activité</title>
+    <style type="text/css">
+        .center-text {
+        text-align: center;
+        }
+        body { font-family : Arial sans-serif; 
+                   font-size : 11pt;    }
+        table, td, th { border : 2px solid rgb(51, 0, 153); }
+        table { width : 80%;
+                   margin: auto;
+                   border-collapse : collapse; 
+                   border-radius : 10px;
+                   box-shadow: 10px 10px 5px gray;    }
+        th, caption { font-size : 12pt;
+                           font-weight : bold; }
+        th { text-align: center; 
+              background-color : rgb(230,230,250);  }
+        td { margin: 2px; padding: 2px; }     
+        a:hover {  background-color: rgb(255,255,204);    }
+
+        body {
+        font-family:"trebuchet ms",sans-serif;
+        font-size:90%;
+        }
+        form {
+        background-color:#FAFAFA;
+        padding:10px;
+        width:280px;
+        }
+        fieldset {
+        padding:0 20px 20px 20px;
+        margin-bottom:10px;
+        border:1px solid #DF3F3F;
+        }
+        legend {
+        color:#DF3F3F;
+        font-weight:bold
+        }
+        label {
+        margin-top:10px;
+        display:block;
+        }
+        label.inline {
+        display:inline;
+        margin-right:50px;
+        }
+        input, textarea, select, option {
+        background-color:#FFF3F3;
+        }
+        input, textarea, select {
+        padding:3px;
+        border:1px solid #F5C5C5;
+        border-radius:5px;
+        width:200px;
+        box-shadow:1px 1px 2px #C0C0C0 inset;
+        }
+        select {
+        margin-top:10px;
+        }
+        input[type=radio] {
+        background-color:transparent;
+        border:none;
+        width:10px;
+        }
+        input[type=submit], input[type=reset] {
+        width:100px;
+        margin-left:5px;
+        box-shadow:1px 1px 1px #D83F3D;
+        cursor:pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="center-text">Dr Jean-Ariel Bronstein</h1>
+    <h1 class="center-text">Activités de consultation et d'endoscopie</h1>
+    <h2 class="center-text">Ajout d'une activité</h2>
+    <form method="POST" action="{{ url_for('ajouter') }}">
+        <div>
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required>
+        </div>
+        <div>
+            <label for="numero_facture">Numéro de Facture:</label>
+            <input type="text" id="numero_facture" name="numero_facture">
+        </div>
+        <div>
+            <label for="dn">Numéro DN:</label>
+            <input type="text" id="dn" name="dn" required>
+        </div>
+        <div>
+            <label for="nom">Nom:</label>
+            <input type="text" id="nom" name="nom" >
+        </div>
+        <div>
+            <label for="prenom">Prénom:</label>
+            <input type="text" id="prenom" name="prenom">
+        </div>
+        <div>
+            <label for="date_naissance">Date de Naissance:</label>
+            <input type="date" id="date_naissance" name="date_naissance">
+        </div>
+        <div>
+            <label for="numero_telephone">Numéro de Téléphone:</label>
+            <input type="text" id="numero_telephone" name="numero_telephone" pattern="\d{2}\.\d{2}\.\d{2}\.\d{2}" placeholder="Format : 00.00.00.00">
+        </div>
+        <div>
+            <label for="mail">Mail:</label>
+            <input type="email" id="mail" name="mail">
+        </div>
+        <div>
+            <label for="acte">Acte:</label>
+            <select id="acte" name="acte" required>
+                <option value="CS">CS</option>
+                <option value="CS_LM">CS_LM</option>
+                <option value="CS_H">CS_H</option>
+                <option value="CS_MGEN">CS_MGEN</option>
+                <option value="ZCQM005">ZCQM005</option>
+                <option value="ZCQM005_H">ZCQM005_H</option>
+                <option value="ZCQM005_LM">ZCQM005_LM</option>
+                <option value="ZCQM005_MGEN">ZCQM005_MGEN</option>
+                <option value="HEQE002">HEQE002</option>
+                <option value="HEQE002/2+HHQE002">HEQE002/2+HHQE002</option>
+                <option value="HEQE002/2+HHFE002">HEQE002/2+HHFE002</option>
+                <option value="HEQE002/2+HHFE006">HEQE002/2+HHFE006</option>
+                <option value="HGQE003/2+HHQE002">HGQE003/2+HHQE002</option>
+                <option value="HESE002">HESE002</option>
+                <option value="HHFE002">HHFE002</option>
+                <option value="HHQE002">HHQE002</option>
+                <option value="HHQE002">HHGE002</option>
+                <option value="HFKE001">HFKE001</option>
+                <option value="HEAE003">HEAE003</option>
+            </select>
+        </div>
+        <div>
+            <label for="modalite_paiement">Modalité de Paiement:</label>
+            <select id="modalite_paiement" name="modalite_paiement" required>
+                <option value="-">-</option>
+                <option value="Especes">Espèces</option>
+                <option value="CB">CB</option>
+                <option value="Cheque">Chèque</option>
+                <option value="Virement">Virement</option>
+                <option value="">-</option>
+            </select>
+        </div>
+        <div>
+            <label for="paiement">Paiement:</label>
+            <input type="number" id="paiement" name="paiement">
+        </div>
+        <div>
+            <label for="observation">Observation:</label>
+            <input type="text" id="observation" name="observation">
+        </div>
+        <div>
+            <input type="submit" value="Ajouter">
+        </div>
+    </form>
+    <br>
+    <br>
+    <h1 class="center-text">Liste des activités par ordre chronologique</h1>
+    
+    <h2 class="center-text">Nombre de patients : <span id="rowCountMessage"></span></h2>
+
+    <table class="center-text" id = monTableau border="1">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Numéro de Semaine</th>
+                <th>Numéro de Facture</th>
+                <th>Numéro DN</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Date de Naissance</th>
+                <th>Numero de téléphone</th>
+                <th>Mail</th>
+                <th>Acte</th>
+                <th>Modalité de Paiement</th>
+                <th>Paiement</th>
+                <th>Observation</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for activite in activites %}
+            <tr>
+                <td class="center-text">{{ format_date(activite.date) }}</td>
+                <td class="center-text">{{ activite.numero_semaine }}</td>
+                <td class="center-text">{{ activite.numero_facture }}</td>
+                <td class="center-text">{{ activite.dn }}</td>
+                <td class="center-text">{{ activite.nom }}</td>
+                <td class="center-text">{{ activite.prenom }}</td>
+                <td class="center-text">{{ format_date(activite.date_naissance) }}</td>
+                <td class="center-text">{{ activite.numero_telephone }}</td>
+                <td class="center-text">{{ activite.mail }}</td>
+                <td class="center-text">{{ activite.acte }}</td>
+                <td class="center-text">{{ activite.modalite_paiement }}</td>
+                <td class="center-text">{{ activite.paiement }}</td>
+                <td class="center-text">{{ activite.observation }}</td>
+                <td>
+                    <a href="{{ url_for('modifier', id=activite.id) }}">Modifier</a>
+                    <a href="{{ url_for('supprimer', id=activite.id) }}">Supprimer</a>
+                    <a href="{{ url_for('facture', id=activite.id) }}">Facture</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var table = document.getElementById('monTableau');
+            var numRows = table.rows.length - 1;
+    
+            var rowCountMessage = document.getElementById('rowCountMessage');
+            rowCountMessage.textContent = 'Nombre de patients : ' + numRows;
+        });
+    </script>
+    <br>
+    <a href="{{ url_for('rechercher') }}">Faire une recherche</a> |
+    <a href="{{ url_for('exporter_excel') }}">Exporter en Excel</a> |
+    <a href="{{ url_for('bordereau') }}">Voir le Bordereau</a> |
+    <a href="{{ url_for('tableau_synthese') }}">Voir le Tableau de Synthèse</a>
+</body>
+</html>
+{% endblock %}

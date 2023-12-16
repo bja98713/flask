@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- resultats_recherche.html -->
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultats de la recherche</title>
+</head>
+<style>
+    .center-text {
+    text-align: center;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 20px;
+        font-size: 18px;
+    }
+
+    h1 {
+            color: #007BFF;
+    }
+
+    h2 {
+            color: #DC3545;
+    }
+
+    p {
+        line-height: 1.6;
+    }
+
+    a {
+        color: #007BFF;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    form {
+        max-width: 600px;
+        margin: auto;
+        background-color: #f4f4f4;
+        padding: 1px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+        display: block;
+        margin-bottom: 15px;
+    }
+
+    input,
+    select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+    }
+</style>
+<body>
+
+    <h1>Résultats de la recherche pour "{{ terme_recherche }}"</h1>
+
+    {% if results %}
+        <table class="center-text", border="1">
+            <tr>
+                <th>Date</th>
+                <th>Numéro de Semaine</th>
+                <th>Numéro de Facture</th>
+                <th>Numéro DN</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Date de Naissance</th>
+                <th>Numero de téléphone</th>
+                <th>Acte</th>
+                <th>Modalité de Paiement</th>
+                <th>Paiement</th>
+                <th>Observation</th>
+                <th>Actions</th>
+            </tr>
+            {% for activite in results %}
+            <tr>
+                <td class="center-text">{{ format_date(activite.date) }}</td>
+                <td class="center-text">{{ activite.numero_semaine }}</td>
+                <td class="center-text">{{ activite.numero_facture }}</td>
+                <td class="center-text">{{ activite.dn }}</td>
+                <td class="center-text">{{ activite.nom }}</td>
+                <td class="center-text">{{ activite.prenom }}</td>
+                <td class="center-text">{{ format_date(activite.date_naissance) }}</td>
+                <td class="center-text">{{ activite.numero_telephone }}</td>
+                <td class="center-text">{{ activite.acte }}</td>
+                <td class="center-text">{{ activite.modalite_paiement }}</td>
+                <td class="center-text">{{ activite.paiement }}</td>
+                <td class="center-text">{{ activite.observation }}</td>
+                <td>
+                    <a href="{{ url_for('modifier', id=activite.id) }}">Modifier</a>
+                    <a href="{{ url_for('supprimer', id=activite.id) }}">Supprimer</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>Aucun résultat trouvé.</p>
+    {% endif %}
+
+    <p>
+        <a href="{{ url_for('index') }}">Retour à la page d'accueil</a> |
+        <a href="{{ url_for('rechercher') }}">Retour à la page de recherche</a>
+    </p>
+
+</body>
+</html>
+{% endblock %}

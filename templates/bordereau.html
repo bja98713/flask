@@ -1,0 +1,84 @@
+<!-- bordereau.html -->
+
+<style>
+    /* Ajoutez du CSS pour styliser le bordereau selon vos préférences */
+    .center-text {
+        text-align: center;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .header {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .footer {
+        margin-top: 20px;
+    }
+</style>
+
+<div class="header">
+    <p>PROFESSIONNEL DE SANTE :</p>
+    <p>M GASTRO - ENTEROLOGUE</p>
+    <p>N° BORDEREAU : </p>
+    <p>DATE DU BORDEREAU : </p>
+    <p>Code praticien : M 3 0 8 9</p>
+    <p>N° destinataire : T 0 0 0 3 1 7 1 0</p>
+    <p>Identité ou Enseigne commerciale : Dr. Jean-Ariel BRONSTEIN</p>
+</div>
+
+
+<form method="POST" action="{{ url_for('bordereau') }}">
+    <label for="numero_semaine">Numéro de Semaine:</label>
+    <input type="text" id="numero_semaine" name="numero_semaine" required>
+    <input type="submit" value="Afficher le Bordereau">
+</form>
+
+{% if bordereau_data %}
+    <table class="center-text", border="1">
+        <tr>
+            <th class="center-text">Numéro de Facture</th>
+            <th class="center-text">Numéro DN</th>
+            <th class="center-text">Nom</th>
+            <th class="center-text">Prénom</th>
+            <th class="center-text">Date</th>
+            <th class="center-text">Paiement CPS</th>
+        </tr>
+        {% for item in bordereau_data %}
+            {% if item.paiement_cps != 0 %}
+            <tr>
+                <td class="center-text">{{ item.numero_facture }}</td>
+                <td class="center-text">{{ item.dn }}</td>
+                <td class="center-text">{{ item.nom }}</td>
+                <td class="center-text">{{ item.prenom }}</td>
+                <td class="center-text">{{ format_date(item.date) }}</td>
+                <td class="center-text">{{ item.paiement_cps }}</td>
+        </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+{% else %}
+    <p>Aucune donnée disponible pour le numéro de semaine spécifié.</p>
+{% endif %}
+
+<div class="footer">
+    <!-- Ajoutez d'autres informations de pied de page si nécessaire -->
+</div>
+<br>
+<a href="{{ url_for('index') }}">Retour vers la liste principale</a>

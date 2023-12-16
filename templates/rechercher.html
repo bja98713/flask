@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- rechercher.html -->
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche</title>
+</head>
+<body>
+
+    <h1>Recherche</h1>
+
+    <form method="post" action="{{ url_for('rechercher') }}">
+        <label for="terme_recherche">Terme de recherche :</label>
+        <input type="text" id="terme_recherche" name="terme_recherche" required>
+        <button type="submit">Rechercher</button>
+    </form>
+
+    <p>
+        <a href="{{ url_for('index') }}">Retour à la page d'accueil</a> |
+    </p>
+
+</body>
+</html>
+{% endblock %}
