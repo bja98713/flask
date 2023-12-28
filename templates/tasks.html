@@ -1,0 +1,59 @@
+{% import 'functions.html' as functions %}
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taches</title>
+</head>
+<body>
+    <h1>Nouvelle Tache :</h1>
+    <form action="/add_task" method="post">
+        <label for="title">Titre:</label>
+        <input type="text" id="title" name="title" required><p>
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" style="width: 600px"><p>
+        <label for="start_date">Date de début :</label>
+        <input type="date" id="start_date" name="start_date">
+        <label for="end_date">Date de fin:</label>
+        <input type="date" id="end_date" name="end_date">
+        <label for="priority">Priorité ?:</label>
+        <input type="number" id="priority" name="priority" min="1">
+        <label for="nom_responsable">Responsable:</label>
+        <input type="text" id="nom_responsable" name="nom_responsable">
+        <button type="submit">Ajouter une tache</button>
+    </form>
+    <h1>Liste des Taches à Faire</h1>
+    <ul>
+        <ul>
+            {% for task in tasks %}
+                <li class="{% if task.done %}completed{% endif %}">
+                    <input type="checkbox" {% if task.done %}checked{% endif %} onclick="window.location.href='/toggle_task/{{ task.id }}'">
+                    <strong style="color: red;">{{ task.title }}</strong> |
+                    <a href="/edit_task/{{ task.id }}">Editer / Modifier</a> |
+                    <a href="/delete_task/{{ task.id }}">Effacer</a>
+                    <br><span> <strong> Description : </strong>  : {{ task.description }}</span> |
+                    <br><span> <strong> Date de départ : </strong> {{ functions.format_date(task.start_date) }}</span> |
+                    <span> <strong> Date de fin : </strong> : {{ functions.format_date(task.end_date) }}</span> |
+                    <br><span> <strong> Ordre de priorité : </strong>  : {{ task.priority }}</span> |
+                    <br><span> <strong> Personne en charge : </strong>  : {{ task.nom_responsable }}</span> |
+                    <span> <strong> Etat d'avancement : </strong>  : {{ task.degre_avancement }}</span> |
+                </li>
+                <br>
+            {% endfor %}
+        </ul>
+        
+    </ul>
+</body>
+</html>
+{% endblock %}
+<script>
+    function format_date(date_str) {
+        // Implémentation simple, à adapter selon le format de votre date
+        var date = new Date(date_str);
+        return date.toLocaleDateString(); // Format de date basique, à ajuster selon vos besoins
+    }
+</script>

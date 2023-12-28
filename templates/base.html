@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon appli</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+
+
+
 </head>
 <body>
     <nav id="navbar">
@@ -15,15 +19,34 @@
                 <a href="{{ url_for('index') }}">Accueil</a>
             </li>
             <li class="navbar-item">
-                <a href="{{ url_for('rechercher') }}">Faire une recherche</a>
+                <a href="{{ url_for('rechercher') }}">Rechercher</a>
             </li>
             <li class="navbar-item">
-                <a href="{{ url_for('bordereau') }}">Voir le Bordereau</a> 
+                <a href="{{ url_for('bordereau') }}">Bordereau</a> 
             </li>
             <li class="navbar-item">
-                <a href="{{ url_for('tableau_synthese') }}">Voir le Tableau de Synthèse</a> 
+                <a href="{{ url_for('tableau_synthese') }}">Tableau de Synthèse</a> 
             </li>
-            
+            <li class="navbar-item">
+                <a href="{{ url_for('tableau_synthese_1') }}">Activité Gobale</a> 
+            </li>
+            <li class="navbar-item">
+                <a href="{{ url_for('bibliographie') }}">Bibliographie</a> 
+            </li>
+            <li class="navbar-item">
+                <a href="{{ url_for('tasks') }}">A Faire</a> 
+            </li>
+            <li class="navbar-item">
+                <a>Journal</a> 
+            </li>
+            <li>
+            <select id="navbar-dropdown" onchange="window.location.href=this.value;">
+                <option value="https://docs.google.com/spreadsheets/d/116q7PuVSUBGGHnQ2MTsQ2hskabVBjt7OL7lZCFBK4ns/edit?usp=drive_link"> d'octobre 2023</option>
+                <option value="https://docs.google.com/spreadsheets/d/1nv2KxunPQrWgalLe9cnD7f5aIpiaczuQ_STI8OWptLM/edit?usp=drive_link"> de novembre 2023</option>
+                <option value="https://docs.google.com/spreadsheets/d/1A__KK1z2MaOAy_lvfpFuz3kovfsMAqCpkto2P4jbG5M/edit?usp=drive_link"> de décembre 2023</option>
+                <!-- Ajoutez d'autres options avec les URL nécessaires -->
+            </select>
+            </li>
             <li class="navbar-item login-logout">
                 {% if current_user.is_authenticated %}
                     <a href="{{ url_for('logout') }}">Se déconnecter</a>

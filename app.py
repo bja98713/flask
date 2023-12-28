@@ -3,7 +3,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-import pandas as pd
+from sqlalchemy.sql import extract
+from flask import send_from_directory
+#import pandas as pd
 #import matplotlib
 #import matplotlib.pyplot as plt
 #from io import BytesIO
@@ -13,6 +15,9 @@ from sqlalchemy import func
 from sqlalchemy.orm.exc import NoResultFound
 #from flask_migrate import Migrate
 #from utils import format_date
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///activite.db'
@@ -39,8 +44,28 @@ class Activite(db.Model):
     observation = db.Column(db.String(255))
     paiement_cps = db.Column(db.Integer, nullable=False)
 
-    def __repr__(self):
-        return f"Activite(id={self.id}, date={self.date}, dn={self.dn}, nom={self.nom}, prenom={self.prenom}, ...)"
+class Task(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(255))
+    start_date = db.Column(db.Date, nullable=True)
+    end_date = db.Column(db.Date, nullable=True)
+    priority = db.Column(db.Integer, nullable=True)
+    nom_responsable = db.Column(db.String(50), nullable=True)
+    degre_avancement = db.Column(db.String(50), nullable=True)
+    done = db.Column(db.Boolean, default=False)
+
+    with app.app_context():
+        db.create_all()
+
+def __repr__(self):
+    return f"Activite(id={self.id}, date={self.date}, dn={self.dn}, nom={self.nom}, prenom={self.prenom}, ...)"
+
+
+def get_task_by_id(task_id):
+    task = db.session.query(Task).filter_by(id=task_id).first()
+    return task
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -59,10 +84,30 @@ def index():
     activites = Activite.query.all()
     return render_template('index.html', activites=activites, format_date=format_date)
 
+@app.route('/bibliographie')   
+@login_required
+def bibliographie():
+    return render_template('bibliographie.html')
+
 def format_date(date):
     return date.strftime('%d/%m/%Y')
 
+@app.route('/pdf/<filename>')
+@login_required
+def pdf(filename):
+    return send_from_directory('static/pdf', filename)
+
+@app.route('/documents')
+@login_required
+def documents():
+    # Créez des liens vers vos fichiers PDF dans le dossier static/pdf/
+    pdf_files = ['Citrafleet.pdf', 'Preparation_colique_intensive.pdf','PEG_renforce.pdf','Picoprep.pdf','Colokit.pdf', 'Moviprep.pdf', 'Izinova_apres_midi.pdf', 'Izinova_matin.pdf', 'Ordo_si_prepa_insuffisante.pdf', 'Normacol_100.pdf',]  # Ajoutez d'autres fichiers au besoin
+    links = [{'title': file, 'url': url_for('pdf', filename=file)} for file in pdf_files]
+    return render_template('documents.html', links=links)
+
+
 @app.route('/ajouter', methods=['POST'])
+@login_required
 def ajouter():
     data = request.form
 
@@ -230,6 +275,28 @@ def tableau_synthese():
 
     return render_template('tableau_synthese.html', tableau_synthese=tableau_synthese)
 
+@app.route('/tableau_synthese_1', methods=['GET'])
+@login_required
+def tableau_synthese_1():
+    # Agrégation par numéro de semaine et par année
+    result = db.session.query(
+        extract('year', Activite.date).label('annee'),
+        extract('week', Activite.date).label('semaine'),
+        func.sum(Activite.paiement).label('somme_totale_paiement')
+    ).group_by('annee', 'semaine').all()
+
+    # Structurez les résultats pour faciliter l'affichage dans le modèle
+    tableau_synthese_1 = {}
+    for annee, semaine, somme_totale_paiement in result:
+        if annee not in tableau_synthese_1:
+            tableau_synthese_1[annee] = {}
+        tableau_synthese_1[annee][semaine] = {
+            'somme_totale_paiement': somme_totale_paiement
+        }
+
+    # Passez la variable tableau_synthese_1 au modèle
+    return render_template('tableau_synthese_1.html', tableau_synthese_1=tableau_synthese_1)
+
 # Dictionnaire des correspondances actes-variables
 correspondances_actes = {
     'CS': {'montant_paye': 4600, 'quote_part_patient': 4600, 'quote_part_organisme': 0},
@@ -289,6 +356,90 @@ def rechercher():
 
     return render_template('rechercher.html')
 
+@app.route('/tasks')
+def tasks():
+    tasks = Task.query.all()
+    return render_template('tasks.html', tasks=tasks)
+def format_date(date):
+    # Implémentation de format_date
+    return date.strftime('%d/%m/%Y')  # Ajustez selon le format de votre date
+
+@app.route('/add_task', methods=['POST'])
+def add_task():
+    title = request.form['title']
+    description = request.form.get('description', '')
+    start_date = request.form.get('start_date')
+    end_date = request.form.get('end_date')
+    priority = request.form.get('priority')
+    nom_responsable = request.form.get('nom_responsable')
+    degre_avancement = request.form.get('degre_avancement')
+
+    new_task = Task(
+        title=title,
+        description=description,
+        start_date=datetime.strptime(start_date, '%Y-%m-%d').date() if start_date else None,
+        end_date=datetime.strptime(end_date, '%Y-%m-%d').date() if end_date else None,
+        priority=int(priority) if priority else None,
+        nom_responsable=nom_responsable,
+        degre_avancement=degre_avancement
+    )
+
+    db.session.add(new_task)
+    db.session.commit()
+
+    # Envoyer un e-mail au destinataire
+    send_email(nom_responsable, "Tache : " + description, "La tâche citée en objet a été crée.")
+
+    return redirect(url_for('tasks'))
+
+
+@app.route('/toggle_task/<int:id>')
+def toggle_task(id):
+    task = Task.query.get(id)
+    task.done = not task.done
+    db.session.commit()
+
+    return redirect(url_for('tasks'))
+
+@app.route('/delete_task/<int:id>')
+def delete_task(id):
+    task = Task.query.get(id)
+    db.session.delete(task)
+    db.session.commit()
+
+    return redirect(url_for('tasks'))
+
+@app.route('/edit_task/<int:task_id>', methods=['GET', 'POST'])
+def edit_task(task_id):
+    task = get_task_by_id(task_id)
+    if task is None:
+        # Gérer le cas où la tâche n'est pas trouvée, par exemple, rediriger vers une page d'erreur
+        return render_template('error.html', message='Tâche non trouvée')
+
+    if request.method == 'POST':
+        # Mettez à jour les détails de la tâche avec les nouvelles valeurs du formulaire
+        task.title = request.form['title']
+        task.description = request.form['description']
+        task.start_date = request.form['start_date']
+        task.start_date = datetime.strptime(request.form['start_date'], '%Y-%m-%d').date()
+        task.end_date = datetime.strptime(request.form['end_date'], '%Y-%m-%d').date()
+        task.nom_responsable = request.form['nom_responsable']
+        task.degre_avancement = request.form['degre_avancement']
+
+        # Enregistrez les modifications (à adapter selon votre logique de persistance)
+        # Exemple: si vous utilisez une base de données SQLAlchemy
+        db.session.commit()
+
+        # Envoyer un e-mail au destinataire
+        send_email(task.nom_responsable, "Tache : " + task.description, "La tâche citée en objet a été modifiée.")
+
+        # Redirigez vers la liste des tâches après la modification
+        return redirect(url_for('tasks'))
+
+    # Si la méthode est GET, affichez le formulaire d'édition avec les détails actuels de la tâche
+    return render_template('edit_task.html', task=task)
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -310,6 +461,32 @@ def logout():
     logout_user()
     flash('Vous avez été déconnecté avec succès.', 'success')
     return redirect(url_for('index'))
+
+#Creation d'un mail
+def send_email(to_email, subject, body):
+    # Configurer le serveur SMTP
+    smtp_server = "smtpx.mana.pf"
+    smtp_port = 587
+    smtp_username = "bronstein@mail.pf"
+    smtp_password = "djibouti"
+
+    # Créer le message
+    message = MIMEMultipart()
+    message["From"] = smtp_username
+    message["To"] = to_email
+    message["Subject"] = subject
+    message.attach(MIMEText(body, "plain"))
+
+    # Établir une connexion avec le serveur SMTP
+    with smtplib.SMTP(smtp_server, smtp_port) as server:
+        # Démarrer la connexion sécurisée
+        #server.starttls()
+
+        # Se connecter au serveur SMTP
+        server.login(smtp_username, smtp_password)
+
+        # Envoyer l'e-mail
+        server.sendmail(smtp_username, to_email, message.as_string())
 
 if __name__ == '__main__':
     with app.app_context():

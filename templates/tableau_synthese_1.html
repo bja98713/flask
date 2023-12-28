@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- tableau_synthese_1.html -->
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <!-- Ajoutez vos balises meta, lien vers le style, etc. ici -->
+    <title>Activité Globale par Semaine</title>
+    <style type="text/css">
+        .center-text {
+        text-align: center;
+        }
+        body { font-family : Arial sans-serif; 
+                   font-size : 11pt;    }
+        table, td, th { border : 2px solid rgb(51, 0, 153); }
+        table { width : 80%;
+                   margin: auto;
+                   border-collapse : collapse; 
+                   border-radius : 10px;
+                   box-shadow: 10px 10px 5px gray;    }
+        th, caption { font-size : 12pt;
+                           font-weight : bold; }
+        th { text-align: center; 
+              background-color : rgb(230,230,250);  }
+        td { margin: 2px; padding: 2px; }     
+        a:hover {  background-color: rgb(255,255,204);    }
+
+        body {
+        font-family:"trebuchet ms",sans-serif;
+        font-size:90%;
+        }
+        form {
+        background-color:#FAFAFA;
+        padding:10px;
+        width:280px;
+        }
+        fieldset {
+        padding:0 20px 20px 20px;
+        margin-bottom:10px;
+        border:1px solid #DF3F3F;
+        }
+        legend {
+        color:#DF3F3F;
+        font-weight:bold
+        }
+        label {
+        margin-top:10px;
+        display:block;
+        }
+        label.inline {
+        display:inline;
+        margin-right:50px;
+        }
+        input, textarea, select, option {
+        background-color:#FFF3F3;
+        }
+        input, textarea, select {
+        padding:3px;
+        border:1px solid #F5C5C5;
+        border-radius:5px;
+        width:200px;
+        box-shadow:1px 1px 2px #C0C0C0 inset;
+        }
+        select {
+        margin-top:10px;
+        }
+        input[type=radio] {
+        background-color:transparent;
+        border:none;
+        width:10px;
+        }
+        input[type=submit], input[type=reset] {
+        width:100px;
+        margin-left:5px;
+        box-shadow:1px 1px 1px #D83F3D;
+        cursor:pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="center-text">Activité Globale par Semaine</h1>
+
+        <table class="center-text">
+  
+             <thead>
+                <tr>
+                    <th>Année</th>
+                    <th>Semaine</th>
+                    <th>Somme totale paiement</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for annee, semaines_data in tableau_synthese_1.items() %}
+                    {% for semaine, data in semaines_data.items() %}
+                        <tr>
+                            <td>{{ annee }}</td>
+                            <td>{{ semaine }}</td>
+                            <td>{{ data.somme_totale_paiement }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% import 'functions.html' as functions %}
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier la Tâche</title>
+    <style>
+        .form-group {
+            display: flex;
+            align-items: center;
+        }
+    
+        .form-group label {
+            margin-right: 10px; /* Ajustez la marge selon vos préférences */
+        }
+    </style>
+</head>
+<body>
+    <h1>Détail de la tâche :</h1>
+    <ul>
+        <li><strong>Titre :</strong> {{ task.title }}</li>
+        <li><strong>Description :</strong> {{ task.description }}</li>
+        <li><strong>Date de début :</strong> {{ functions.format_date(task.start_date) }}</li>
+        <li><strong>Date de fin :</strong> {{ functions.format_date(task.end_date) }}</li>
+        <li><strong>Priorité :</strong> {{ task.priority }}</li>
+        <li><strong>Responsable :</strong> {{ task.nom_responsable }}</li>
+        <li><strong>Avancement :</strong> {{ task.degre_avancement }}</li>
+    </ul>
+    <h1>Que faut il modifier dans cette Tâche ? :</h1>
+    <form action="/edit_task/{{ task.id }}" method="post">
+        <ul>
+            <li>
+                <strong><label for="title">Titre:</label></strong>
+                <input type="text" id="title" name="title" value="{{ task.title }}" required>
+            </li>
+            <li>
+                <div class="form-group">
+                    <strong><label for="description">Description:</label></strong>
+                    <textarea id="description" name="description" rows="2" cols="150">{{ task.description }}</textarea>
+                </div>
+            </li>
+            <li>
+                <strong><label for="start_date">Date de début :</label></strong>
+                <input type="date" id="start_date" name="start_date" value="{{ task.start_date }}">
+            </li>
+            <li>
+                <strong><label for="end_date">Date de fin:</label></strong>
+                <input type="date" id="end_date" name="end_date" value="{{ task.end_date }}">
+            </li>
+            <li>
+                <strong><label for="priority">Priorité ?:</label></strong>
+                <input type="number" id="priority" name="priority" value="{{ task.priority }}" min="1">
+            </li>
+            <li>
+                <strong><label for="nom_responsable">Responsable:</label></strong>
+                <input type="text" id="nom_responsable" name="nom_responsable" value="{{ task.nom_responsable }}">
+            </li>
+            <li>
+                <strong><label for="degre_avancement">Avancement:</label></strong>
+                <input type="text" id="degre_avancement" name="degre_avancement" value="{{ task.degre_avancement }}">
+            </li>
+        </ul>
+        <button type="submit">Enregistrer les modifications</button>
+    </form>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bibliographie Médicale</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 10px;
+            background-color: rgb(27, 46, 216);
+            color: white;
+        }
+        nav {
+            display: flex;
+            justify-content: space-around;
+            background-color: rgb(20, 169, 238);
+            color: white;
+            padding: 10px;
+        }
+        section {
+            margin: 20px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: rgb(27, 46, 216);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Bibliographie Médicale</h1>
+</header>
+
+<nav>
+    <a href="{{ url_for('index') }}">Retour à l'Accueil</a>
+    <a href="#ordonnances">Ordonnances</a>
+    <a href="#schedule">Programme</a>
+    <a href="#speakers">Intervenants</a>
+    <a href="#registration">Inscription</a>
+    <a href="#contact">Contact</a>
+</nav>
+
+<section id="ordonnances">
+    <h2>À propos des ordonnances</h2>
+    <p>La liste des ordonnances selon différentes pathologies est accessible ici : <a href="{{ url_for('documents') }}">Accès aux Documents</a> </p>
+</section>
+
+<section id="schedule">
+    <h2>Programme</h2>
+    <p>Blablabla...</p>
+</section>
+
+<section id="speakers">
+    <h2>Intervenants</h2>
+    <p>Blablabla...</p>
+</section>
+
+<section id="registration">
+    <h2>Inscription</h2>
+    <p>Blablabla...</p>
+</section>
+
+<section id="contact">
+    <h2>Contact</h2>
+    <p>Blablabla...</p>
+</section>
+
+<footer>
+    <p>&copy; 2023 jean-Ariel Bronstein. Tous droits réservés.</p>
+</footer>
+
+</body>
+</html>

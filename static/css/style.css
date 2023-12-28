@@ -42,3 +42,8 @@ body {
 #container {
     margin: 20px 50px;
 }
+
+.completed {
+    text-decoration: line-through;
+    /* ou tout autre style que vous souhaitez appliquer aux tâches complétées */
+}
